@@ -30,7 +30,7 @@ function activate(context) {
   // The commandId parameter must match the command field in package.json
   let disposable = commands.registerCommand('extension.testFile', () => {
     if (!packageManager) {
-      packageManager = getPackageManager();
+      packageManager = getPackageManager(workspace.rootPath);
     }
 
     terminal = terminal || window.createTerminal(terminalTitle);
