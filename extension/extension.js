@@ -33,6 +33,10 @@ function activate(context) {
       packageManager = getPackageManager(workspace.rootPath);
     }
 
+    window.onDidCloseTerminal(closedTerminal => {
+      if (closedTerminal === terminal) terminal = undefined;
+    });
+
     terminal = terminal || window.createTerminal(terminalTitle);
     terminal.show(true);
     terminal.sendText(
