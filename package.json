@@ -2,7 +2,7 @@
   "name": "test-runner",
   "displayName": "test-runner",
   "description": "Runs test of current file",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "ericTurf",
   "engines": {
     "vscode": "^1.28.0"
