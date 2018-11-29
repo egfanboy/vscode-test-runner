@@ -32,13 +32,16 @@
     "type": "git",
     "url": "git+https://github.com/EricTurf/vscode-test-runner.git"
   },
+  "icon": "assets/logo.png",
   "scripts": {
     "postinstall": "node ./node_modules/vscode/bin/install",
     "test": "node ./node_modules/vscode/bin/test"
   },
   "devDependencies": {
     "prettier": "^1.14.3",
-    "vscode": "^1.1.21"
+    "vscode": "^1.1.22"
   },
-  "dependencies": {}
+  "dependencies": {
+    "rxjs": "^6.3.3"
+  }
 }

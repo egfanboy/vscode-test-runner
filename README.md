@@ -8,6 +8,12 @@ In a test file use the keyboard shortcut `⌥`+`⌘`+`t` and your test will run.
 
 ## Release Notes
 
+## 1.0.3 [2018-11-29]
+
+enhancement
+
+- Added the ability to run tests in directories with nested `package.json` [#4](https://github.com/EricTurf/vscode-test-runner/pull/4)
+
 ## 1.0.2 [2018-11-19]
 
 :bug:
