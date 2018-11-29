@@ -4,6 +4,12 @@ All notable changes to the "test-runner" extension will be documented in this fi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## 1.0.3 [2018-11-29]
+
+enhancement
+
+- Added the ability to run tests in directories with nested `package.json` [#4](https://github.com/EricTurf/vscode-test-runner/pull/4)
+
 ## 1.0.2 [2018-11-19]
 
 :bug:

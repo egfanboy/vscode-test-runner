@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const getPackageManager = require('./get-package-manager');
+const getCwd = require('./get-cwd');
 
 let terminal;
 let packageManager;
@@ -11,6 +12,9 @@ const PKG_COMMANDS = {
   yarn: 'yarn',
   npm: 'npm run',
 };
+
+const terminalTitle = `Jest Test Runner v${getVersion()}`;
+let previousCwd = '';
 
 function getPkgCommand() {
   return PKG_COMMANDS[packageManager];
@@ -21,8 +25,6 @@ function getVersion() {
     fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf-8')
   ).version;
 }
-
-const terminalTitle = `Jest Test Runner v${getVersion()}`;
 
 function activate(context) {
   // The command has been defined in the package.json file
@@ -37,12 +39,32 @@ function activate(context) {
       if (closedTerminal === terminal) terminal = undefined;
     });
 
-    terminal = terminal || window.createTerminal(terminalTitle);
+    const cwd = getCwd(
+      workspace.rootPath,
+      workspace.asRelativePath(window.activeTextEditor.document.uri)
+    );
+
+    if (previousCwd && cwd !== previousCwd) {
+      terminal && terminal.dispose();
+      terminal = undefined;
+    }
+
+    terminal =
+      terminal ||
+      window.createTerminal({
+        name: terminalTitle,
+        cwd,
+      });
+
+    previousCwd = cwd;
+
+    const cwdRoot = cwd.split('/').pop();
+
     terminal.show(true);
     terminal.sendText(
-      `${getPkgCommand()} test ${workspace.asRelativePath(
-        window.activeTextEditor.document.uri
-      )}`
+      `${getPkgCommand()} test ${workspace
+        .asRelativePath(window.activeTextEditor.document.uri)
+        .replace(`${cwdRoot}/`, '')}`
     );
   });
 
@@ -50,7 +72,6 @@ function activate(context) {
 }
 
 // this method is called when your extension is deactivated
-
 function deactivate() {
   terminal && terminal.dispose();
 }
