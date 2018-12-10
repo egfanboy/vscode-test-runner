@@ -54,10 +54,7 @@ function activate(context) {
     previousCwd = cwd;
 
     const cwdRoot = cwd.split('/').pop();
-    /* ${getTestFilePath(filePath).replace(
-        `${cwdRoot}/`,
-        ''
-      )*/
+   
     terminal.show(true);
     terminal.sendText(
       `${getPkgCommand()} test ${getTestFilePath(
