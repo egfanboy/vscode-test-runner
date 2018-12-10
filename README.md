@@ -8,7 +8,7 @@ In a test file use the keyboard shortcut `⌥`+`⌘`+`t` and your test will run.
 
 ## Release Notes
 
-## 1.0.4 [2018-11-29]
+## 1.0.4 [2018-12-10]
 
 enhancement
 
