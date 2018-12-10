@@ -4,6 +4,12 @@ All notable changes to the "test-runner" extension will be documented in this fi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## 1.0.4 [2018-12-10]
+
+enhancement
+
+- Added the ability to attempt to run tests from respective file [#6](https://github.com/EricTurf/vscode-test-runner/pull/6)
+
 ## 1.0.3 [2018-11-29]
 
 enhancement

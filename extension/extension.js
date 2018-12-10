@@ -1,6 +1,7 @@
 const { window, commands, workspace } = require('vscode');
-const fs = require('fs');
-const path = require('path');
+
+const { version } = require('../package.json');
+const getTestFilePath = require('./get-test-file-path');
 
 const getPackageManager = require('./get-package-manager');
 const getCwd = require('./get-cwd');
@@ -13,17 +14,11 @@ const PKG_COMMANDS = {
   npm: 'npm run',
 };
 
-const terminalTitle = `Jest Test Runner v${getVersion()}`;
+const terminalTitle = `Jest Test Runner v${version}`;
 let previousCwd = '';
 
 function getPkgCommand() {
   return PKG_COMMANDS[packageManager];
-}
-
-function getVersion() {
-  return JSON.parse(
-    fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf-8')
-  ).version;
 }
 
 function activate(context) {
@@ -59,12 +54,15 @@ function activate(context) {
     previousCwd = cwd;
 
     const cwdRoot = cwd.split('/').pop();
-
+    /* ${getTestFilePath(filePath).replace(
+        `${cwdRoot}/`,
+        ''
+      )*/
     terminal.show(true);
     terminal.sendText(
-      `${getPkgCommand()} test ${workspace
-        .asRelativePath(window.activeTextEditor.document.uri)
-        .replace(`${cwdRoot}/`, '')}`
+      `${getPkgCommand()} test ${getTestFilePath(
+        workspace.asRelativePath(window.activeTextEditor.document.uri)
+      ).replace(`${cwdRoot}/`, '')}`
     );
   });
 
