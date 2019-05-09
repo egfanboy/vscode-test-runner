@@ -8,6 +8,7 @@ const getCwd = require('./get-cwd');
 
 let terminal;
 let packageManager;
+let configWatcher;
 
 const PKG_COMMANDS = {
   yarn: 'yarn',
@@ -27,8 +28,15 @@ function activate(context) {
   // The commandId parameter must match the command field in package.json
   let disposable = commands.registerCommand('extension.testFile', () => {
     if (!packageManager) {
-      packageManager = getPackageManager(workspace.rootPath);
+      packageManager = getPackageManager({ ...workspace, ...window });
     }
+
+    if (!configWatcher)
+      configWatcher = workspace.onDidChangeConfiguration(event => {
+        if (event.affectsConfiguration('test-runner')) {
+          packageManager = getPackageManager({ ...workspace, ...window });
+        }
+      });
 
     window.onDidCloseTerminal(closedTerminal => {
       if (closedTerminal === terminal) terminal = undefined;
@@ -54,7 +62,7 @@ function activate(context) {
     previousCwd = cwd;
 
     const cwdRoot = cwd.split('/').pop();
-   
+
     terminal.show(true);
     terminal.sendText(
       `${getPkgCommand()} test ${getTestFilePath(
@@ -68,6 +76,7 @@ function activate(context) {
 
 // this method is called when your extension is deactivated
 function deactivate() {
+  configWatcher && configWatcher.dispose();
   terminal && terminal.dispose();
 }
 

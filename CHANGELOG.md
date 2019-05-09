@@ -4,6 +4,12 @@ All notable changes to the "test-runner" extension will be documented in this fi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+# 1.0.5 [2019-05-09]
+
+enhancement
+
+- Added the ability to set your preferred package manager with settings "test-runner.packageManager" [#10](https://github.com/EricTurf/vscode-test-runner/pull/10)
+
 ## 1.0.4 [2018-12-10]
 
 enhancement

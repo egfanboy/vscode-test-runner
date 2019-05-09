@@ -1,8 +1,8 @@
 {
   "name": "test-runner",
   "displayName": "test-runner",
-  "description": "Runs test of current file",
-  "version": "1.0.4",
+  "description": "Runs test of current file using `yarn` or `npm`",
+  "version": "1.0.5",
   "publisher": "ericTurf",
   "engines": {
     "vscode": "^1.28.0"
@@ -26,7 +26,24 @@
         "key": "alt+cmd+t",
         "command": "extension.testFile"
       }
-    ]
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Test-Runner configuration",
+      "properties": {
+        "test-runner": {
+          "type": "object",
+          "default": "{}",
+          "description": "Configurations for test runner",
+          "properties": {
+            "packageManager": {
+              "type": "string",
+              "description": "Your prefered package manager"
+            }
+          }
+        }
+      }
+    }
   },
   "repository": {
     "type": "git",
