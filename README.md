@@ -6,7 +6,29 @@ Simply runs your test command found in the `package.json` of your workspace **ro
 
 In a test file use the keyboard shortcut `⌥`+`⌘`+`t` and your test will run.
 
+## Configuration
+
+By default this extension will use read your current directory and determine if you use `yarn` or `npm` to run your tests. It assumes if any file with `yarn` (ie `yarn.lock`) is present that you use `yarn`, otherwise it will assume you use `npm`.
+
+However if you find yourself in a situation where your project uses `npm` but you still want to use `yarn` to run your tests (or vice-versa) you can set the package manager in your vscode settings with the `test-runner.packageManager`
+
+```JSON
+// settings.json
+{
+    "test-runner": {
+        "packageManager": "yarn"
+    }
+}
+
+```
+
 ## Release Notes
+
+# 1.0.5 [2019-05-09]
+
+enhancement
+
+- Added the ability to set your preferred package manager using `test-runner.packageManager` [#10](https://github.com/EricTurf/vscode-test-runner/pull/10)
 
 ## 1.0.4 [2018-12-10]
 
