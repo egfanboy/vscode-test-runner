@@ -57,8 +57,5 @@
   "devDependencies": {
     "prettier": "^1.14.3",
     "vscode": "^1.1.22"
-  },
-  "dependencies": {
-    "rxjs": "^6.3.3"
   }
 }
