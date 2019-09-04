@@ -3,12 +3,13 @@ const { window, commands, workspace } = require('vscode');
 const { version } = require('../package.json');
 const getTestFilePath = require('./get-test-file-path');
 
-const getPackageManager = require('./get-package-manager');
+const getPackageManager = require('./get-package-manager').default;
 const getCwd = require('./get-cwd');
 
 let terminal;
 let packageManager;
 let configWatcher;
+let outlookChannel;
 
 const PKG_COMMANDS = {
   yarn: 'yarn',
@@ -38,14 +39,13 @@ function activate(context) {
         }
       });
 
+    if (!outlookChannel) outlookChannel = window.createOutputChannel(terminalTitle);
+
     window.onDidCloseTerminal(closedTerminal => {
       if (closedTerminal === terminal) terminal = undefined;
     });
 
-    const cwd = getCwd(
-      workspace.rootPath,
-      workspace.asRelativePath(window.activeTextEditor.document.uri)
-    );
+    const cwd = getCwd(workspace.rootPath, workspace.asRelativePath(window.activeTextEditor.document.uri));
 
     if (previousCwd && cwd !== previousCwd) {
       terminal && terminal.dispose();
@@ -65,9 +65,11 @@ function activate(context) {
 
     terminal.show(true);
     terminal.sendText(
-      `${getPkgCommand()} test ${getTestFilePath(
-        workspace.asRelativePath(window.activeTextEditor.document.uri)
-      ).replace(`${cwdRoot}/`, '')}`
+      `${getPkgCommand()} test ${getTestFilePath({
+        filePath: workspace.asRelativePath(window.activeTextEditor.document.uri),
+        outlookChannel,
+        ...window,
+      }).replace(`${cwdRoot}/`, '')}`
     );
   });
 
@@ -78,6 +80,7 @@ function activate(context) {
 function deactivate() {
   configWatcher && configWatcher.dispose();
   terminal && terminal.dispose();
+  outlookChannel && outlookChannel.dispose();
 }
 
 exports.activate = activate;

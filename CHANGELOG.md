@@ -4,6 +4,14 @@ All notable changes to the "test-runner" extension will be documented in this fi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+# 1.1.0 [2019-09-03]
+
+enhancement
+
+- Added the ability to use typescript test files
+- Added logging in case of errors (see in Output > Jest Test Runner tab)
+- Improved test file resolution logic
+
 # 1.0.5 [2019-05-09]
 
 enhancement
