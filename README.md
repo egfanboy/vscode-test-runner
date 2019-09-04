@@ -28,9 +28,9 @@ However if you find yourself in a situation where your project uses `npm` but yo
 
 enhancement
 
-- Added the ability to use typescript test files
-- Added logging in case of errors (see in Output > Jest Test Runner tab)
-- Improved test file resolution logic
+- Added the ability to use typescript test files [#14](https://github.com/EricTurf/vscode-test-runner/pull/14)
+- Added logging in case of errors (see in Output > Jest Test Runner tab) [#14](https://github.com/EricTurf/vscode-test-runner/pull/14)
+- Improved test file resolution logic [#14](https://github.com/EricTurf/vscode-test-runner/pull/14)
 
 # 1.0.5 [2019-05-09]
 
