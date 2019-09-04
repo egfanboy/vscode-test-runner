@@ -24,6 +24,14 @@ However if you find yourself in a situation where your project uses `npm` but yo
 
 ## Release Notes
 
+# 1.1.0 [2019-09-03]
+
+enhancement
+
+- Added the ability to use typescript test files
+- Added logging in case of errors (see in Output > Jest Test Runner tab)
+- Improved test file resolution logic
+
 # 1.0.5 [2019-05-09]
 
 enhancement
