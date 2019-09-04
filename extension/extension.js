@@ -3,7 +3,7 @@ const { window, commands, workspace } = require('vscode');
 const { version } = require('../package.json');
 const getTestFilePath = require('./get-test-file-path');
 
-const getPackageManager = require('./get-package-manager').default;
+const getPackageManager = require('./get-package-manager');
 const getCwd = require('./get-cwd');
 
 let terminal;
