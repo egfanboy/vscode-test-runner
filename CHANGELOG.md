@@ -4,6 +4,12 @@ All notable changes to the "test-runner" extension will be documented in this fi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+# 1.2.0 [unreleased]
+
+enhancement:
+
+- **Converted** to typescript [#16]https://github.com/EricTurf/vscode-test-runner/pull/16
+
 # 1.1.1 [2019-09-21]
 
 enhancement
