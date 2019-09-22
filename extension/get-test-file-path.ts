@@ -1,14 +1,14 @@
-const { workspace, window } = require('vscode');
-const fs = require('fs');
-const path = require('path');
+import { workspace, window } from 'vscode';
+import * as fs from 'fs';
+import * as path from 'path';
 
-const logger = require('./logger');
+import logger from './logger';
 
 const testFileRegex = /\.((spec)|(test))\.([jt]s)/;
 
 const testFolderRegex = /^((spec\b)|(tests\b)|(__tests__\b))/;
 
-const deriveTestFile = (directoryPath, fileName) => {
+const deriveTestFile = (directoryPath: string, fileName: string): string => {
   const potentialTestFiles = fs.readdirSync(directoryPath).filter(file => testFileRegex.test(file));
 
   logger.log(`Potential test for ${fileName}: ${potentialTestFiles.join(', ')}`);
@@ -31,12 +31,15 @@ const deriveTestFile = (directoryPath, fileName) => {
 
     window.showErrorMessage(errorMessage);
     logger.log(errorMessage);
-
-    return '';
   }
+
+  return '';
 };
 
-module.exports = filePath => {
+export default (filePath: string): string | undefined => {
+  if (!workspace.workspaceFolders) {
+    return;
+  }
   logger.log('Enter getTestFilePath');
 
   if (testFileRegex.test(filePath)) {
@@ -46,7 +49,7 @@ module.exports = filePath => {
 
   const filePathParts = filePath.split('/');
 
-  const fileName = filePathParts.pop();
+  const fileName = filePathParts.pop() as string;
 
   const {
     uri: { fsPath },
@@ -62,7 +65,7 @@ module.exports = filePath => {
   if (hasTestDirectory) {
     logger.log('Test Directory (tests | __tests__ | spec) found. Looking in it for test files');
 
-    const testDirectoryName = directoryFiles.find(file => testFolderRegex.test(file));
+    const testDirectoryName = directoryFiles.find(file => testFolderRegex.test(file)) as string;
 
     return deriveTestFile(path.join(fsPath, directory, testDirectoryName), fileName);
   } else {

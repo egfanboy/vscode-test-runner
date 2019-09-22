@@ -1,8 +1,8 @@
-const fs = require('fs');
-const path = require('path');
-const { window } = require('vscode');
+import * as fs from 'fs';
+import * as path from 'path';
+import { window } from 'vscode';
 
-module.exports = function(rootPath, pathToFile) {
+export default function(rootPath: string, pathToFile: string): string | undefined {
   const filePaths = pathToFile.split('/');
 
   // Last element is always a file so remove it
@@ -10,7 +10,7 @@ module.exports = function(rootPath, pathToFile) {
 
   const rootHasPackageJSON = fs.readdirSync(rootPath).includes('package.json');
 
-  const nestedDirectory = filePaths.reduce((acc, directoryName) => {
+  const nestedDirectory = filePaths.reduce((acc: string, directoryName) => {
     const directoryIndex = filePaths.findIndex(p => p === directoryName);
 
     const restOfFilePaths = filePaths.slice(0, directoryIndex);
@@ -27,4 +27,4 @@ module.exports = function(rootPath, pathToFile) {
   if (rootHasPackageJSON) return rootPath;
 
   window.showErrorMessage(`None of the following directories contain a package.json. ${filePaths.join(', ')}`);
-};
+}
