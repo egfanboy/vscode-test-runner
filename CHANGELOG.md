@@ -4,12 +4,18 @@ All notable changes to the "test-runner" extension will be documented in this fi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+# 1.1.1 [2019-09-21]
+
+bug fix
+
+- Fixed an issue where you could not test files in a project nested 2+ directories deep
+
 # 1.1.0 [2019-09-03]
 
 enhancement
 
 - Added the ability to use typescript test files [#14](https://github.com/EricTurf/vscode-test-runner/pull/14)
-- Added logging in case of errors (see in Output > Jest Test Runner tab) [#14](https://github.com/EricTurf/vscode-test-runner/pull/14)
+- Added logging in case of errors (see in Output > Test Runner tab) [#14](https://github.com/EricTurf/vscode-test-runner/pull/14)
 - Improved test file resolution logic [#14](https://github.com/EricTurf/vscode-test-runner/pull/14)
 
 # 1.0.5 [2019-05-09]

@@ -1,6 +1,8 @@
 const { window, commands, workspace } = require('vscode');
 
-const { version } = require('../package.json');
+const packageTitle = require('./package-title');
+const logger = require('./logger');
+
 const getTestFilePath = require('./get-test-file-path');
 
 const getPackageManager = require('./get-package-manager');
@@ -9,14 +11,12 @@ const getCwd = require('./get-cwd');
 let terminal;
 let packageManager;
 let configWatcher;
-let outlookChannel;
 
 const PKG_COMMANDS = {
   yarn: 'yarn',
   npm: 'npm run',
 };
 
-const terminalTitle = `Jest Test Runner v${version}`;
 let previousCwd = '';
 
 function getPkgCommand() {
@@ -28,49 +28,54 @@ function activate(context) {
   // Now provide the implementation of the command with  registerCommand
   // The commandId parameter must match the command field in package.json
   let disposable = commands.registerCommand('extension.testFile', () => {
-    if (!packageManager) {
-      packageManager = getPackageManager({ ...workspace, ...window });
-    }
-
     if (!configWatcher)
       configWatcher = workspace.onDidChangeConfiguration(event => {
         if (event.affectsConfiguration('test-runner')) {
-          packageManager = getPackageManager({ ...workspace, ...window });
+          packageManager = getPackageManager();
         }
       });
-
-    if (!outlookChannel) outlookChannel = window.createOutputChannel(terminalTitle);
 
     window.onDidCloseTerminal(closedTerminal => {
       if (closedTerminal === terminal) terminal = undefined;
     });
 
-    const cwd = getCwd(workspace.rootPath, workspace.asRelativePath(window.activeTextEditor.document.uri));
+    const {
+      uri: { fsPath },
+    } = workspace.workspaceFolders[0];
+
+    const cwd = getCwd(fsPath, workspace.asRelativePath(window.activeTextEditor.document.uri));
 
     if (previousCwd && cwd !== previousCwd) {
+      logger.log('Cwd changed, deleting current terminal');
       terminal && terminal.dispose();
       terminal = undefined;
+    }
+
+    if (cwd !== previousCwd) {
+      packageManager = getPackageManager(cwd);
     }
 
     terminal =
       terminal ||
       window.createTerminal({
-        name: terminalTitle,
+        name: packageTitle,
         cwd,
       });
 
     previousCwd = cwd;
 
-    const cwdRoot = cwd.split('/').pop();
+    const testFilePath = getTestFilePath(workspace.asRelativePath(window.activeTextEditor.document.uri));
 
-    terminal.show(true);
-    terminal.sendText(
-      `${getPkgCommand()} test ${getTestFilePath({
-        filePath: workspace.asRelativePath(window.activeTextEditor.document.uri),
-        outlookChannel,
-        ...window,
-      }).replace(`${cwdRoot}/`, '')}`
-    );
+    if (testFilePath) {
+      const fullTestFilePathParts = testFilePath.split('/');
+      const cwdName = cwd.split('/').pop();
+      const relativeCwdIndex = fullTestFilePathParts.findIndex(part => part === cwdName);
+
+      const relativeTestFilePath = fullTestFilePathParts.slice(relativeCwdIndex + 1).join('/');
+
+      terminal.show(true);
+      terminal.sendText(`${getPkgCommand()} test ${relativeTestFilePath}`);
+    }
   });
 
   context.subscriptions.push(disposable);
@@ -80,7 +85,7 @@ function activate(context) {
 function deactivate() {
   configWatcher && configWatcher.dispose();
   terminal && terminal.dispose();
-  outlookChannel && outlookChannel.dispose();
+  logger.destroy();
 }
 
 exports.activate = activate;
