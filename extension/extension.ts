@@ -1,33 +1,37 @@
-const { window, commands, workspace } = require('vscode');
+import { window, commands, workspace, Terminal, Disposable } from 'vscode';
 
-const packageTitle = require('./package-title');
-const logger = require('./logger');
+import packageTitle from './package-title';
+import logger from './logger';
 
-const getTestFilePath = require('./get-test-file-path');
+import getTestFilePath from './get-test-file-path';
 
-const getPackageManager = require('./get-package-manager');
-const getCwd = require('./get-cwd');
+import getPackageManager from './get-package-manager';
+import getCwd from './get-cwd';
 
-let terminal;
-let packageManager;
-let configWatcher;
+let terminal: Terminal | undefined;
+let packageManager: string;
+let configWatcher: Disposable;
 
-const PKG_COMMANDS = {
+const PKG_COMMANDS: { [key: string]: string } = {
   yarn: 'yarn',
   npm: 'npm run',
 };
 
 let previousCwd = '';
 
-function getPkgCommand() {
+function getPkgCommand(): string {
   return PKG_COMMANDS[packageManager];
 }
 
-function activate(context) {
+export function activate(context: { subscriptions: Disposable[] }) {
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with  registerCommand
   // The commandId parameter must match the command field in package.json
   let disposable = commands.registerCommand('extension.testFile', () => {
+    if (!workspace.workspaceFolders || !window.activeTextEditor) {
+      return;
+    }
+
     if (!configWatcher)
       configWatcher = workspace.onDidChangeConfiguration(event => {
         if (event.affectsConfiguration('test-runner')) {
@@ -44,6 +48,10 @@ function activate(context) {
     } = workspace.workspaceFolders[0];
 
     const cwd = getCwd(fsPath, workspace.asRelativePath(window.activeTextEditor.document.uri));
+
+    if (!cwd) {
+      return;
+    }
 
     if (previousCwd && cwd !== previousCwd) {
       logger.log('Cwd changed, deleting current terminal');
@@ -69,7 +77,7 @@ function activate(context) {
     if (testFilePath) {
       const fullTestFilePathParts = testFilePath.split('/');
       const cwdName = cwd.split('/').pop();
-      const relativeCwdIndex = fullTestFilePathParts.findIndex(part => part === cwdName);
+      const relativeCwdIndex = fullTestFilePathParts.findIndex((part: any) => part === cwdName);
 
       const relativeTestFilePath = fullTestFilePathParts.slice(relativeCwdIndex + 1).join('/');
 
@@ -82,11 +90,8 @@ function activate(context) {
 }
 
 // this method is called when your extension is deactivated
-function deactivate() {
+export function deactivate() {
   configWatcher && configWatcher.dispose();
   terminal && terminal.dispose();
   logger.destroy();
 }
-
-exports.activate = activate;
-exports.deactivate = deactivate;

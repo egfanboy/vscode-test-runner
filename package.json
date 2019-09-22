@@ -13,7 +13,7 @@
   "activationEvents": [
     "onCommand:extension.testFile"
   ],
-  "main": "./extension/extension",
+  "main": "./build/extension/extension.js",
   "contributes": {
     "commands": [
       {
@@ -52,10 +52,18 @@
   "icon": "assets/logo.png",
   "scripts": {
     "postinstall": "node ./node_modules/vscode/bin/install",
-    "test": "node ./node_modules/vscode/bin/test"
+    "test": "node ./node_modules/vscode/bin/test",
+    "vscode:prepublish": "yarn run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
   },
   "devDependencies": {
+    "@types/node": "^12.7.5",
+    "@types/vscode": "1.14.0",
     "prettier": "^1.14.3",
     "vscode": "^1.1.22"
+  },
+  "dependencies": {
+    "typescript": "^3.6.3"
   }
 }
