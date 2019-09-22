@@ -28,7 +28,7 @@ However if you find yourself in a situation where your project uses `npm` but yo
 
 bug fix
 
-- Fixed an issue where you could not test files in a project nested 2+ directories deep
+- Fixed an issue where you could not test files in a project nested 2+ directories deep [#15](https://github.com/EricTurf/vscode-test-runner/pull/15)
 
 # 1.1.0 [2019-09-03]
 
